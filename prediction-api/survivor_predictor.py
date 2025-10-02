@@ -12,6 +12,7 @@ class SurvivorPredictor:
     def __init__(self):
         self.model = None
 
+
     def predict_single_record(self, prediction_input):
         logging.debug(prediction_input)
         if self.model is None:

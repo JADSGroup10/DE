@@ -20,7 +20,7 @@ def check_diabetes():
         prediction_input = [
             {
                 "class": int(request.form.get("class")),
-                "sex": request.form.get("class"),
+                "sex": request.form.get("sex"),
                 "age": int(request.form.get("age")),
                 "no_of_siblings_or_partners_onboard": int(request.form.get("no_of_siblings_or_partners_onboard")),
                 "no_of_parents_or_children_onboard": int(request.form.get("no_of_parents_or_children_onboard")),
@@ -29,17 +29,19 @@ def check_diabetes():
 
         app.logger.debug("Prediction input : %s", prediction_input)
 
-        # use requests library to execute the prediction service API by sending an HTTP POST request
-        # use an environment variable to find the value of the diabetes prediction API
-        # json.dumps() function will convert a subset of Python objects into a json string.
-        # json.loads() method can be used to parse a valid JSON string and convert it into a Python Dictionary.
-        predictor_api_url = os.environ['PREDICTOR_API']
-        res = requests.post(predictor_api_url, json=json.loads(json.dumps(prediction_input)))
+        # TODO WILT ML LATER
+        # predictor_api_url = os.environ['PREDICTOR_API']
+        # res = requests.post(predictor_api_url, json=json.loads(json.dumps(prediction_input)))
 
-        prediction_value = res.json()['result']
-        app.logger.info("Prediction Output : %s", prediction_value)
+        # prediction_value = res.json()['result']
+        # app.logger.info("Prediction Output : %s", prediction_value)
+        if prediction_input[0]["class"] == 1:
+            prediction_value = 1
+        else: 
+            prediction_value = 0
+        
         return render_template("response_page.html",
-                               prediction_variable=eval(prediction_value))
+                               prediction_variable=int(prediction_value))
 
     else:
         return jsonify(message="Method Not Allowed"), 405  # The 405 Method Not Allowed should be used to indicate
