@@ -1,27 +1,31 @@
 <html>
 <head>
-    <title>Titanic Survivor Check Form</title>
+    <title></title>
+    <link rel="stylesheet" href="../static/input_css.css">
+
 </head>
 <body>
 
 <form action="/checksurvivor" method="POST">
-    <h1> Check whether a person survived in Titanic accident!</h1>
-    <label for="class">In which class was the person travelling? (1,2,3):</label>
-    <input type="text" id="class" name="class" placeholder="class"> <br>
+    <h1> Predict if a person survived the Titanic accident!</h1>
+    <div class="input_container">
+        <label for="class">In which class was the person travelling? (1,2,3):</label>
+        <input type="text" id="class" name="class" placeholder="Enter here"> <br>
 
-    <label for="class">Passenger's sex (Male of female)</label>
-    <input type="text" id="sex" name="sex" placeholder="sex"> <br>
+        <label for="sex">Passenger's sex (Male of female)</label>
+        <input type="text" id="sex" name="sex" placeholder="Enter here"> <br>
 
-    <label for="age">What was the age of the passenger?:</label>
-    <input type="text" id="age" name="age" placeholder="age"> <br>
+        <label for="age">What was the age of the passenger?:</label>
+        <input type="text" id="age" name="age" placeholder="Enter here"> <br>
 
-    <label for="no_of_siblings_or_partners_onboard">Number of siblings or partners on board with the passenger:</label>
-    <input type="text" id="no_of_siblings_or_partners_onboard" name="no_of_siblings_or_partners_onboard" placeholder="no_of_siblings_or_partners_onboard"> <br>
+        <label for="no_of_siblings_or_partners_onboard">Number of siblings or partners on board with the passenger:</label>
+        <input type="text" id="no_of_siblings_or_partners_onboard" name="no_of_siblings_or_partners_onboard" placeholder="Enter here"> <br>
 
-    <label for="no_of_parents_or_children_onboard">Number of parents or children on board with the passenger:</label>
-    <input type="text" id="no_of_parents_or_children_onboard" name="no_of_parents_or_children_onboard" placeholder="no_of_parents_or_children_onboard"> <br>
+        <label for="no_of_parents_or_children_onboard">Number of parents or children on board with the passenger:</label>
+        <input type="text" id="no_of_parents_or_children_onboard" name="no_of_parents_or_children_onboard" placeholder="Enter here"> <br>
+    </div>
 
-    <p><input type='submit' value='Check'/></p>
+    <p><input class= 'button-28' type='submit' value='Predict!'/></p>
 </form>
 
 </body>
