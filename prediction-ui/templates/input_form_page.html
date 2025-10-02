@@ -1,0 +1,30 @@
+<html>
+<head>
+    <title>Titanic Survivor Check Form</title>
+</head>
+<body>
+
+<form action="/checksurvivor" method="POST">
+    <h1> Check whether a person survived in Titanic accident!</h1>
+    <label for="class">In which class was the person travelling? (1,2,3):</label>
+    <input type="text" id="class" name="class" placeholder="class"> <br>
+
+    <label for="class">Passenger's sex (Male of female)</label>
+    <input type="text" id="sex" name="sex" placeholder="sex"> <br>
+
+    <label for="age">What was the age of the passenger?:</label>
+    <input type="text" id="age" name="age" placeholder="age"> <br>
+
+    <label for="no_of_siblings_or_partners_onboard">Number of siblings or partners on board with the passenger:</label>
+    <input type="text" id="no_of_siblings_or_partners_onboard" name="no_of_siblings_or_partners_onboard" placeholder="no_of_siblings_or_partners_onboard"> <br>
+
+    <label for="no_of_parents_or_children_onboard">Number of parents or children on board with the passenger:</label>
+    <input type="text" id="no_of_parents_or_children_onboard" name="no_of_parents_or_children_onboard" placeholder="no_of_parents_or_children_onboard"> <br>
+
+    <p><input type='submit' value='Check'/></p>
+</form>
+
+</body>
+</html>
+
+<!-- check https://flask.palletsprojects.com/en/2.3.x/tutorial/templates/ for information if needed -->
