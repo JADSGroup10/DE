@@ -29,7 +29,8 @@ def check_diabetes():
 
         app.logger.debug("Prediction input : %s", prediction_input)
 
-        # TODO WILT ML LATER
+        
+        # TODO WIth ML LATER
         # predictor_api_url = os.environ['PREDICTOR_API']
         # res = requests.post(predictor_api_url, json=json.loads(json.dumps(prediction_input)))
 

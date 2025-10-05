@@ -1,13 +1,14 @@
 <html>
 <head>
-    <title>Likelihood of Surviving</title>
+    <title>Did the person survive?</title>
+    <link rel="stylesheet" href="../static/stylesheet_css.css">
 </head>
 <body>
 
 {% if prediction_variable==1 %}
-    <p>Alive! yey:]</p>
+    <p class="input_container">Alive! yey:]</p>
 {% else %}
-    <p>Dead! sad:[</p>
+    <p class="input_container">Dead! sad:[</p>
 {% endif %}
 </body>
 </html>
