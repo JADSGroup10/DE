@@ -46,12 +46,8 @@ def checksurvivor():
                                prediction_variable=int(prediction_value))
 
     else:
-        return jsonify(message="Method Not Allowed"), 405  # The 405 Method Not Allowed should be used to indicate
-    # that our app that does not allow the users to perform any other HTTP method (e.g., PUT and  DELETE) for
-    # '/checkdiabetes' path
+        return jsonify(message="Method Not Allowed"), 405  
 
 
-# The code within this conditional block will only run the python file is executed as a
-# script. See https://realpython.com/if-name-main-python/
 if __name__ == '__main__':
     app.run(port=int(os.environ.get("PORT", 5003)), host='0.0.0.0', debug=True)
