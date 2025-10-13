@@ -12,34 +12,35 @@ app = Flask(__name__)
 # A decorator used to tell the application
 # which URL is associated function
 @app.route('/checksurvivor', methods=["GET", "POST"])
-def check_diabetes():
+def checksurvivor():
     if request.method == "GET":
         return render_template("input_form_page.html")
 
     elif request.method == "POST":
         prediction_input = [
             {
-                "class": int(request.form.get("class")),
-                "sex": request.form.get("sex"),
-                "age": int(request.form.get("age")),
+                "Pclass": int(request.form.get("class")),
+                "Sex": request.form.get("sex"),
+                "Age": int(request.form.get("age")),
                 "no_of_siblings_or_partners_onboard": int(request.form.get("no_of_siblings_or_partners_onboard")),
                 "no_of_parents_or_children_onboard": int(request.form.get("no_of_parents_or_children_onboard")),
             }
         ]
 
+        if prediction_input[0]["Sex"].lower() == "male":
+            prediction_input[0]["Sex"] = 0
+        elif prediction_input[0]["Sex"].lower() == "female":
+            prediction_input[0]["Sex"] = 1
+
         app.logger.debug("Prediction input : %s", prediction_input)
 
-        
-        # TODO WIth ML LATER
-        # predictor_api_url = os.environ['PREDICTOR_API']
-        # res = requests.post(predictor_api_url, json=json.loads(json.dumps(prediction_input)))
 
-        # prediction_value = res.json()['result']
-        # app.logger.info("Prediction Output : %s", prediction_value)
-        if prediction_input[0]["class"] == 1:
-            prediction_value = 1
-        else: 
-            prediction_value = 0
+        predictor_api_url = os.environ['PREDICTOR_API']
+        res = requests.post(predictor_api_url, json=json.loads(json.dumps(prediction_input)))
+
+        prediction_value = res.json()['result']
+        app.logger.info("Prediction Output : %s", prediction_value)
+
         
         return render_template("response_page.html",
                                prediction_variable=int(prediction_value))
@@ -53,4 +54,4 @@ def check_diabetes():
 # The code within this conditional block will only run the python file is executed as a
 # script. See https://realpython.com/if-name-main-python/
 if __name__ == '__main__':
-    app.run(port=int(os.environ.get("PORT", 5000)), host='0.0.0.0', debug=True)
+    app.run(port=int(os.environ.get("PORT", 5003)), host='0.0.0.0', debug=True)

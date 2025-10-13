@@ -12,10 +12,10 @@ app.config["DEBUG"] = True
 def predict_str():
     # the prediction input data in the message body as a JSON payload
     prediction_input = request.get_json()
-    return dp.predict_single_record(prediction_input)
+    return sp.predict_single_record(prediction_input)
 
 
-dp = SurvivorPredictor()
+sp = SurvivorPredictor()
 if __name__ == '__main__':
-    app.run(port=int(os.getenv("PORT", 5000)), host='0.0.0.0', debug=True)
+    app.run(port=int(os.getenv("PORT", 5002)), host='0.0.0.0', debug=True)
 
