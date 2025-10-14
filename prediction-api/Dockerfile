@@ -12,7 +12,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy all files in prediction-api local host directory to /usr/src/myapp in Docker container
 COPY . .
 # Expose the port that our app runs in
-EXPOSE 5002
+EXPOSE 5000
 # Environment Variables
 ENV MODEL_REPO=/usr/src/myapp
 ENV MODEL_NAME="lr_model.pkl"

@@ -9,7 +9,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy all files in prediction-ui local host directory to /usr/src/myapp in Docker container
 COPY . .
 # Expose the port that our app runs in
-EXPOSE 5003
+EXPOSE 5000
 # Environment Variables
 ENV PREDICTOR_API=http://predictor-api-server:5000/survivor_predictor/
 #Add some meta data if necessary
