@@ -4,9 +4,6 @@ FROM python:3.12.7-slim
 WORKDIR /usr/src/myapp
 # Copy requirements.txt  to the working directory
 COPY requirements.txt .
-
-#Copy over the models
-COPY ../models/ .
 # Install required python packages
 RUN pip install --no-cache-dir -r requirements.txt
 # Copy all files in prediction-api local host directory to /usr/src/myapp in Docker container
@@ -14,7 +11,7 @@ COPY . .
 # Expose the port that our app runs in
 EXPOSE 5000
 # Environment Variables
-ENV MODEL_REPO=/usr/src/myapp
+ENV MODEL_REPO=/usr/src/myapp/models
 ENV MODEL_NAME="lr_model.pkl"
 # Run our App
 CMD ["python3","app.py"]
