@@ -20,8 +20,7 @@ class SurvivorPredictor:
         if self.model is None:
             try:
                 model_repo = os.environ['MODEL_REPO'] #environment variable MODEL_REPO should point to the repo
-                model_name = os.environ['MODEL_NAME']  #enviornment variable MODEL_NAME should specify the model, either lr_model.pckl or rf_model.pkl
-                file_path = os.path.join(model_repo, model_name)
+                file_path = os.path.join(model_repo, "best_model.pkl")
                 with open(file_path, 'rb') as f:
                     self.model = pickle.load(f)
             except KeyError:

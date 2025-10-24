@@ -12,6 +12,5 @@ COPY . .
 EXPOSE 5000
 # Environment Variables
 ENV MODEL_REPO=/usr/src/myapp/models
-ENV MODEL_NAME="lr_model.pkl"
 # Run our App
 CMD ["python3","app.py"]
