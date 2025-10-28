@@ -8,3 +8,5 @@ For testing locally export the following environmental variables:
 - PREDICTOR_API="http://127.0.0.1:5002/survivor_predictor"
 
 Model name should be best_model.pkl
+
+
