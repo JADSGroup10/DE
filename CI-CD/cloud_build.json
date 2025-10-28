@@ -59,7 +59,11 @@
         "2",
         "--memory",
         "4G",
-        "--allow-unauthenticated"
+        "--allow-unauthenticated",
+        "--set-env-vars",
+        "CLOUDBUILD_WEBHOOK_BASE_URL=${_CLOUDBUILD_WEBHOOK_BASE_URL}",
+        "--set-secrets",
+        "CLOUDBUILD_SECRET_KEY=cloudbuild-webhook-secret:latest"
       ],
       "id": "prediction-api-deploy"
     },
