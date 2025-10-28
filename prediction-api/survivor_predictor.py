@@ -27,7 +27,9 @@ class SurvivorPredictor:
                 print("MODEL_REPO or MODEL_NAME is undefined")
                 exit()
 
+        logging.info(f"Got the following request: {StringIO(json.dumps(prediction_input))}")
         df = pd.read_json(StringIO(json.dumps(prediction_input)), orient='records')
+        logging.info(df)
         y_pred = self.model.predict(df)
         logging.info(y_pred[0])
         logging.info(str(y_pred[0]))
