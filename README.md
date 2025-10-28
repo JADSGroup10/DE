@@ -1,5 +1,5 @@
 # DE
-Repo for DE assignment
+Repo for DE assignment:
 
 Server for all google cloud: europe-west4
 
