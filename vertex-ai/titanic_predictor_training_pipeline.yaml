@@ -305,9 +305,9 @@ deploymentSpec:
         - "\nif ! [ -x \"$(command -v pip)\" ]; then\n    python3 -m ensurepip ||\
           \ python3 -m ensurepip --user || apt-get install python3-pip\nfi\n\nPIP_DISABLE_PIP_VERSION_CHECK=1\
           \ python3 -m pip install --quiet --no-warn-script-location 'pandas' 'google-cloud-storage'\
-          \  &&  python3 -m pip install --quiet --no-warn-script-location 'kfp==2.14.6'\
-          \ '--no-deps' 'typing-extensions>=3.7.4,<5; python_version<\"3.9\"' && \"\
-          $0\" \"$@\"\n"
+          \ 'packaging'  &&  python3 -m pip install --quiet --no-warn-script-location\
+          \ 'kfp==2.14.6' '--no-deps' 'typing-extensions>=3.7.4,<5; python_version<\"\
+          3.9\"' && \"$0\" \"$@\"\n"
         - sh
         - -ec
         - 'program_path=$(mktemp -d)
@@ -341,9 +341,9 @@ deploymentSpec:
         - "\nif ! [ -x \"$(command -v pip)\" ]; then\n    python3 -m ensurepip ||\
           \ python3 -m ensurepip --user || apt-get install python3-pip\nfi\n\nPIP_DISABLE_PIP_VERSION_CHECK=1\
           \ python3 -m pip install --quiet --no-warn-script-location 'pandas' 'google-cloud-storage'\
-          \  &&  python3 -m pip install --quiet --no-warn-script-location 'kfp==2.14.6'\
-          \ '--no-deps' 'typing-extensions>=3.7.4,<5; python_version<\"3.9\"' && \"\
-          $0\" \"$@\"\n"
+          \ 'packaging'  &&  python3 -m pip install --quiet --no-warn-script-location\
+          \ 'kfp==2.14.6' '--no-deps' 'typing-extensions>=3.7.4,<5; python_version<\"\
+          3.9\"' && \"$0\" \"$@\"\n"
         - sh
         - -ec
         - 'program_path=$(mktemp -d)
@@ -551,9 +551,9 @@ deploymentSpec:
         - "\nif ! [ -x \"$(command -v pip)\" ]; then\n    python3 -m ensurepip ||\
           \ python3 -m ensurepip --user || apt-get install python3-pip\nfi\n\nPIP_DISABLE_PIP_VERSION_CHECK=1\
           \ python3 -m pip install --quiet --no-warn-script-location 'google-cloud-storage'\
-          \  &&  python3 -m pip install --quiet --no-warn-script-location 'kfp==2.14.6'\
-          \ '--no-deps' 'typing-extensions>=3.7.4,<5; python_version<\"3.9\"' && \"\
-          $0\" \"$@\"\n"
+          \ 'packaging'  &&  python3 -m pip install --quiet --no-warn-script-location\
+          \ 'kfp==2.14.6' '--no-deps' 'typing-extensions>=3.7.4,<5; python_version<\"\
+          3.9\"' && \"$0\" \"$@\"\n"
         - sh
         - -ec
         - 'program_path=$(mktemp -d)
@@ -570,10 +570,10 @@ deploymentSpec:
           \ storage   \n    import logging \n    import sys\n\n    logging.basicConfig(stream=sys.stdout,\
           \ level=logging.INFO)    \n\n    # upload the model to GCS\n    client =\
           \ storage.Client(project=project_id)\n    bucket = client.bucket(model_repo)\n\
-          \    blob = bucket.blob(str(model.metadata[\"algo\"]) + '_model' + str(model.metadata[\"\
-          file_type\"])) \n    blob.upload_from_filename(model.path + str(model.metadata[\"\
-          file_type\"]))       \n\n    print(\"Saved the model to GCP bucket : \"\
-          \ + model_repo)\n\n"
+          \    blob = bucket.blob(\"best_model\" + str(model.metadata[\"file_type\"\
+          ]))\n    blob.upload_from_filename(model.path + str(model.metadata[\"file_type\"\
+          ]))       \n\n    print(\"Saved the model to GCP bucket : \" + model_repo)\n\
+          \n"
         image: python:3.10.7-slim
     exec-upload-model-to-gcs-2:
       container:
@@ -588,9 +588,9 @@ deploymentSpec:
         - "\nif ! [ -x \"$(command -v pip)\" ]; then\n    python3 -m ensurepip ||\
           \ python3 -m ensurepip --user || apt-get install python3-pip\nfi\n\nPIP_DISABLE_PIP_VERSION_CHECK=1\
           \ python3 -m pip install --quiet --no-warn-script-location 'google-cloud-storage'\
-          \  &&  python3 -m pip install --quiet --no-warn-script-location 'kfp==2.14.6'\
-          \ '--no-deps' 'typing-extensions>=3.7.4,<5; python_version<\"3.9\"' && \"\
-          $0\" \"$@\"\n"
+          \ 'packaging'  &&  python3 -m pip install --quiet --no-warn-script-location\
+          \ 'kfp==2.14.6' '--no-deps' 'typing-extensions>=3.7.4,<5; python_version<\"\
+          3.9\"' && \"$0\" \"$@\"\n"
         - sh
         - -ec
         - 'program_path=$(mktemp -d)
@@ -607,10 +607,10 @@ deploymentSpec:
           \ storage   \n    import logging \n    import sys\n\n    logging.basicConfig(stream=sys.stdout,\
           \ level=logging.INFO)    \n\n    # upload the model to GCS\n    client =\
           \ storage.Client(project=project_id)\n    bucket = client.bucket(model_repo)\n\
-          \    blob = bucket.blob(str(model.metadata[\"algo\"]) + '_model' + str(model.metadata[\"\
-          file_type\"])) \n    blob.upload_from_filename(model.path + str(model.metadata[\"\
-          file_type\"]))       \n\n    print(\"Saved the model to GCP bucket : \"\
-          \ + model_repo)\n\n"
+          \    blob = bucket.blob(\"best_model\" + str(model.metadata[\"file_type\"\
+          ]))\n    blob.upload_from_filename(model.path + str(model.metadata[\"file_type\"\
+          ]))       \n\n    print(\"Saved the model to GCP bucket : \" + model_repo)\n\
+          \n"
         image: python:3.10.7-slim
 pipelineInfo:
   name: titanic-predictor-training-pipeline
