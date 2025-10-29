@@ -3,10 +3,49 @@
 # Inputs:
 #    data_bucket: str
 #    model_repo: str
+#    old_model_file_name: str
 #    project_id: str
 #    testset_filename: str
 #    trainset_filename: str
 components:
+  comp-compare-against-old-model:
+    executorLabel: exec-compare-against-old-model
+    inputDefinitions:
+      artifacts:
+        old_model:
+          artifactType:
+            schemaTitle: system.Model
+            schemaVersion: 0.0.1
+        test_data:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+      parameters:
+        new_model_metrics:
+          parameterType: STRUCT
+    outputDefinitions:
+      parameters:
+        Output:
+          parameterType: BOOLEAN
+  comp-compare-against-old-model-2:
+    executorLabel: exec-compare-against-old-model-2
+    inputDefinitions:
+      artifacts:
+        old_model:
+          artifactType:
+            schemaTitle: system.Model
+            schemaVersion: 0.0.1
+        test_data:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+      parameters:
+        new_model_metrics:
+          parameterType: STRUCT
+    outputDefinitions:
+      parameters:
+        Output:
+          parameterType: BOOLEAN
   comp-compare-model:
     executorLabel: exec-compare-model
     inputDefinitions:
@@ -20,6 +59,75 @@ components:
         Output:
           parameterType: STRING
   comp-condition-1:
+    dag:
+      tasks:
+        compare-against-old-model:
+          cachingOptions:
+            enableCache: true
+          componentRef:
+            name: comp-compare-against-old-model
+          inputs:
+            artifacts:
+              old_model:
+                componentInputArtifact: pipelinechannel--download-old-model-old_model
+              test_data:
+                componentInputArtifact: pipelinechannel--download-data-2-dataset
+            parameters:
+              new_model_metrics:
+                componentInputParameter: pipelinechannel--train-lr-metrics
+          taskInfo:
+            name: compare-against-old-model
+        condition-2:
+          componentRef:
+            name: comp-condition-2
+          dependentTasks:
+          - compare-against-old-model
+          inputs:
+            artifacts:
+              pipelinechannel--download-data-2-dataset:
+                componentInputArtifact: pipelinechannel--download-data-2-dataset
+              pipelinechannel--train-lr-out_model:
+                componentInputArtifact: pipelinechannel--train-lr-out_model
+            parameters:
+              pipelinechannel--compare-against-old-model-Output:
+                taskOutputParameter:
+                  outputParameterKey: Output
+                  producerTask: compare-against-old-model
+              pipelinechannel--compare-model-Output:
+                componentInputParameter: pipelinechannel--compare-model-Output
+              pipelinechannel--model_repo:
+                componentInputParameter: pipelinechannel--model_repo
+              pipelinechannel--project_id:
+                componentInputParameter: pipelinechannel--project_id
+          taskInfo:
+            name: condition-2
+          triggerPolicy:
+            condition: inputs.parameter_values['pipelinechannel--compare-against-old-model-Output']
+              == true
+    inputDefinitions:
+      artifacts:
+        pipelinechannel--download-data-2-dataset:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+        pipelinechannel--download-old-model-old_model:
+          artifactType:
+            schemaTitle: system.Model
+            schemaVersion: 0.0.1
+        pipelinechannel--train-lr-out_model:
+          artifactType:
+            schemaTitle: system.Model
+            schemaVersion: 0.0.1
+      parameters:
+        pipelinechannel--compare-model-Output:
+          parameterType: STRING
+        pipelinechannel--model_repo:
+          parameterType: STRING
+        pipelinechannel--project_id:
+          parameterType: STRING
+        pipelinechannel--train-lr-metrics:
+          parameterType: STRUCT
+  comp-condition-2:
     dag:
       tasks:
         predict-lr:
@@ -64,13 +172,84 @@ components:
             schemaTitle: system.Model
             schemaVersion: 0.0.1
       parameters:
+        pipelinechannel--compare-against-old-model-Output:
+          parameterType: BOOLEAN
         pipelinechannel--compare-model-Output:
           parameterType: STRING
         pipelinechannel--model_repo:
           parameterType: STRING
         pipelinechannel--project_id:
           parameterType: STRING
-  comp-condition-2:
+  comp-condition-3:
+    dag:
+      tasks:
+        compare-against-old-model-2:
+          cachingOptions:
+            enableCache: true
+          componentRef:
+            name: comp-compare-against-old-model-2
+          inputs:
+            artifacts:
+              old_model:
+                componentInputArtifact: pipelinechannel--download-old-model-old_model
+              test_data:
+                componentInputArtifact: pipelinechannel--download-data-2-dataset
+            parameters:
+              new_model_metrics:
+                componentInputParameter: pipelinechannel--train-rf-metrics
+          taskInfo:
+            name: compare-against-old-model-2
+        condition-4:
+          componentRef:
+            name: comp-condition-4
+          dependentTasks:
+          - compare-against-old-model-2
+          inputs:
+            artifacts:
+              pipelinechannel--download-data-2-dataset:
+                componentInputArtifact: pipelinechannel--download-data-2-dataset
+              pipelinechannel--train-rf-out_model:
+                componentInputArtifact: pipelinechannel--train-rf-out_model
+            parameters:
+              pipelinechannel--compare-against-old-model-2-Output:
+                taskOutputParameter:
+                  outputParameterKey: Output
+                  producerTask: compare-against-old-model-2
+              pipelinechannel--compare-model-Output:
+                componentInputParameter: pipelinechannel--compare-model-Output
+              pipelinechannel--model_repo:
+                componentInputParameter: pipelinechannel--model_repo
+              pipelinechannel--project_id:
+                componentInputParameter: pipelinechannel--project_id
+          taskInfo:
+            name: condition-4
+          triggerPolicy:
+            condition: inputs.parameter_values['pipelinechannel--compare-against-old-model-2-Output']
+              == true
+    inputDefinitions:
+      artifacts:
+        pipelinechannel--download-data-2-dataset:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+        pipelinechannel--download-old-model-old_model:
+          artifactType:
+            schemaTitle: system.Model
+            schemaVersion: 0.0.1
+        pipelinechannel--train-rf-out_model:
+          artifactType:
+            schemaTitle: system.Model
+            schemaVersion: 0.0.1
+      parameters:
+        pipelinechannel--compare-model-Output:
+          parameterType: STRING
+        pipelinechannel--model_repo:
+          parameterType: STRING
+        pipelinechannel--project_id:
+          parameterType: STRING
+        pipelinechannel--train-rf-metrics:
+          parameterType: STRUCT
+  comp-condition-4:
     dag:
       tasks:
         predict-rf:
@@ -115,6 +294,8 @@ components:
             schemaTitle: system.Model
             schemaVersion: 0.0.1
       parameters:
+        pipelinechannel--compare-against-old-model-2-Output:
+          parameterType: BOOLEAN
         pipelinechannel--compare-model-Output:
           parameterType: STRING
         pipelinechannel--model_repo:
@@ -152,6 +333,22 @@ components:
         dataset:
           artifactType:
             schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+  comp-download-old-model:
+    executorLabel: exec-download-old-model
+    inputDefinitions:
+      parameters:
+        bucket:
+          parameterType: STRING
+        file_name:
+          parameterType: STRING
+        project_id:
+          parameterType: STRING
+    outputDefinitions:
+      artifacts:
+        old_model:
+          artifactType:
+            schemaTitle: system.Model
             schemaVersion: 0.0.1
   comp-predict-lr:
     executorLabel: exec-predict-lr
@@ -259,6 +456,96 @@ components:
           parameterType: STRING
 deploymentSpec:
   executors:
+    exec-compare-against-old-model:
+      container:
+        args:
+        - --executor_input
+        - '{{$}}'
+        - --function_to_execute
+        - compare_against_old_model
+        command:
+        - sh
+        - -c
+        - "\nif ! [ -x \"$(command -v pip)\" ]; then\n    python3 -m ensurepip ||\
+          \ python3 -m ensurepip --user || apt-get install python3-pip\nfi\n\nPIP_DISABLE_PIP_VERSION_CHECK=1\
+          \ python3 -m pip install --quiet --no-warn-script-location 'pandas' 'scikit-learn==1.3.2'\
+          \  &&  python3 -m pip install --quiet --no-warn-script-location 'kfp==2.14.6'\
+          \ '--no-deps' 'typing-extensions>=3.7.4,<5; python_version<\"3.9\"' && \"\
+          $0\" \"$@\"\n"
+        - sh
+        - -ec
+        - 'program_path=$(mktemp -d)
+
+
+          printf "%s" "$0" > "$program_path/ephemeral_component.py"
+
+          _KFP_RUNTIME=true python3 -m kfp.dsl.executor_main                         --component_module_path                         "$program_path/ephemeral_component.py"                         "$@"
+
+          '
+        - "\nimport kfp\nfrom kfp import dsl\nfrom kfp.dsl import *\nfrom typing import\
+          \ *\n\ndef compare_against_old_model(new_model_metrics: dict, old_model:\
+          \ Input[Model], test_data: Input[Dataset]) -> bool:\n    '''compare performance'''\n\
+          \    from sklearn.metrics import accuracy_score\n    import logging\n  \
+          \  import sys\n    import pandas as pd\n    import pickle\n    import json\n\
+          \    import os\n\n    logging.basicConfig(stream=sys.stdout, level=logging.INFO)\n\
+          \n    df_test = pd.read_csv(test_data.path+\".csv\")\n    logging.info(\"\
+          Successfully loaded test data\")\n\n    filename = old_model.path + \".pkl\"\
+          \n\n    #Loading the saved model\n    with open(filename, \"rb\") as f:\n\
+          \        model = pickle.load(f)\n\n    logging.info(\"Successfully loaded\
+          \ old model\")\n\n    X_test = df_test.iloc[:, :-1]\n    Y_test = df_test[\"\
+          Survived\"]\n\n\n    y_pred = model.predict(X_test)\n    old_accuracy =\
+          \ accuracy_score(Y_test, y_pred)\n    logging.info(f\"Accuracy of old model\
+          \ is {old_accuracy}\")\n\n    if old_accuracy > new_model_metrics.get(\"\
+          accuracy\"):\n        logging.info(f\"Old model outperforms new model\"\
+          )\n        return False\n    else:\n        logging.info(f\"New model outperforms\
+          \ old model\")\n        return True #True if the new model performs better\
+          \ or same\n\n"
+        image: python:3.10.7-slim
+    exec-compare-against-old-model-2:
+      container:
+        args:
+        - --executor_input
+        - '{{$}}'
+        - --function_to_execute
+        - compare_against_old_model
+        command:
+        - sh
+        - -c
+        - "\nif ! [ -x \"$(command -v pip)\" ]; then\n    python3 -m ensurepip ||\
+          \ python3 -m ensurepip --user || apt-get install python3-pip\nfi\n\nPIP_DISABLE_PIP_VERSION_CHECK=1\
+          \ python3 -m pip install --quiet --no-warn-script-location 'pandas' 'scikit-learn==1.3.2'\
+          \  &&  python3 -m pip install --quiet --no-warn-script-location 'kfp==2.14.6'\
+          \ '--no-deps' 'typing-extensions>=3.7.4,<5; python_version<\"3.9\"' && \"\
+          $0\" \"$@\"\n"
+        - sh
+        - -ec
+        - 'program_path=$(mktemp -d)
+
+
+          printf "%s" "$0" > "$program_path/ephemeral_component.py"
+
+          _KFP_RUNTIME=true python3 -m kfp.dsl.executor_main                         --component_module_path                         "$program_path/ephemeral_component.py"                         "$@"
+
+          '
+        - "\nimport kfp\nfrom kfp import dsl\nfrom kfp.dsl import *\nfrom typing import\
+          \ *\n\ndef compare_against_old_model(new_model_metrics: dict, old_model:\
+          \ Input[Model], test_data: Input[Dataset]) -> bool:\n    '''compare performance'''\n\
+          \    from sklearn.metrics import accuracy_score\n    import logging\n  \
+          \  import sys\n    import pandas as pd\n    import pickle\n    import json\n\
+          \    import os\n\n    logging.basicConfig(stream=sys.stdout, level=logging.INFO)\n\
+          \n    df_test = pd.read_csv(test_data.path+\".csv\")\n    logging.info(\"\
+          Successfully loaded test data\")\n\n    filename = old_model.path + \".pkl\"\
+          \n\n    #Loading the saved model\n    with open(filename, \"rb\") as f:\n\
+          \        model = pickle.load(f)\n\n    logging.info(\"Successfully loaded\
+          \ old model\")\n\n    X_test = df_test.iloc[:, :-1]\n    Y_test = df_test[\"\
+          Survived\"]\n\n\n    y_pred = model.predict(X_test)\n    old_accuracy =\
+          \ accuracy_score(Y_test, y_pred)\n    logging.info(f\"Accuracy of old model\
+          \ is {old_accuracy}\")\n\n    if old_accuracy > new_model_metrics.get(\"\
+          accuracy\"):\n        logging.info(f\"Old model outperforms new model\"\
+          )\n        return False\n    else:\n        logging.info(f\"New model outperforms\
+          \ old model\")\n        return True #True if the new model performs better\
+          \ or same\n\n"
+        image: python:3.10.7-slim
     exec-compare-model:
       container:
         args:
@@ -363,6 +650,42 @@ deploymentSpec:
           \    bucket = client.bucket(bucket)\n    blob = bucket.blob(file_name)\n\
           \    blob.download_to_filename(dataset.path + \".csv\")\n    logging.info(f'Downloaded\
           \ Data {dataset.path}!')\n\n"
+        image: python:3.10.7-slim
+    exec-download-old-model:
+      container:
+        args:
+        - --executor_input
+        - '{{$}}'
+        - --function_to_execute
+        - download_old_model
+        command:
+        - sh
+        - -c
+        - "\nif ! [ -x \"$(command -v pip)\" ]; then\n    python3 -m ensurepip ||\
+          \ python3 -m ensurepip --user || apt-get install python3-pip\nfi\n\nPIP_DISABLE_PIP_VERSION_CHECK=1\
+          \ python3 -m pip install --quiet --no-warn-script-location 'pandas' 'google-cloud-storage'\
+          \ 'packaging'  &&  python3 -m pip install --quiet --no-warn-script-location\
+          \ 'kfp==2.14.6' '--no-deps' 'typing-extensions>=3.7.4,<5; python_version<\"\
+          3.9\"' && \"$0\" \"$@\"\n"
+        - sh
+        - -ec
+        - 'program_path=$(mktemp -d)
+
+
+          printf "%s" "$0" > "$program_path/ephemeral_component.py"
+
+          _KFP_RUNTIME=true python3 -m kfp.dsl.executor_main                         --component_module_path                         "$program_path/ephemeral_component.py"                         "$@"
+
+          '
+        - "\nimport kfp\nfrom kfp import dsl\nfrom kfp.dsl import *\nfrom typing import\
+          \ *\n\ndef download_old_model(project_id: str, bucket: str, file_name: str,\
+          \ old_model: Output[Model]):\n    '''download old model'''\n    from google.cloud\
+          \ import storage\n    import pandas as pd\n    import logging\n    import\
+          \ sys\n\n    logging.basicConfig(stream=sys.stdout, level=logging.INFO)\n\
+          \n    # Downloaing the file from a google bucket\n    client = storage.Client(project=project_id)\n\
+          \    bucket = client.bucket(bucket)\n    blob = bucket.blob(file_name)\n\
+          \    blob.download_to_filename(old_model.path + \".pkl\")\n    logging.info(f'Downloaded\
+          \ old model {old_model.path}!')\n\n"
         image: python:3.10.7-slim
     exec-predict-lr:
       container:
@@ -643,6 +966,7 @@ root:
         dependentTasks:
         - compare-model
         - download-data-2
+        - download-old-model
         - train-lr
         inputs:
           artifacts:
@@ -650,6 +974,10 @@ root:
               taskOutputArtifact:
                 outputArtifactKey: dataset
                 producerTask: download-data-2
+            pipelinechannel--download-old-model-old_model:
+              taskOutputArtifact:
+                outputArtifactKey: old_model
+                producerTask: download-old-model
             pipelinechannel--train-lr-out_model:
               taskOutputArtifact:
                 outputArtifactKey: out_model
@@ -663,17 +991,22 @@ root:
               componentInputParameter: model_repo
             pipelinechannel--project_id:
               componentInputParameter: project_id
+            pipelinechannel--train-lr-metrics:
+              taskOutputParameter:
+                outputParameterKey: metrics
+                producerTask: train-lr
         taskInfo:
           name: condition-1
         triggerPolicy:
           condition: inputs.parameter_values['pipelinechannel--compare-model-Output']
             == 'LR'
-      condition-2:
+      condition-3:
         componentRef:
-          name: comp-condition-2
+          name: comp-condition-3
         dependentTasks:
         - compare-model
         - download-data-2
+        - download-old-model
         - train-rf
         inputs:
           artifacts:
@@ -681,6 +1014,10 @@ root:
               taskOutputArtifact:
                 outputArtifactKey: dataset
                 producerTask: download-data-2
+            pipelinechannel--download-old-model-old_model:
+              taskOutputArtifact:
+                outputArtifactKey: old_model
+                producerTask: download-old-model
             pipelinechannel--train-rf-out_model:
               taskOutputArtifact:
                 outputArtifactKey: out_model
@@ -694,8 +1031,12 @@ root:
               componentInputParameter: model_repo
             pipelinechannel--project_id:
               componentInputParameter: project_id
+            pipelinechannel--train-rf-metrics:
+              taskOutputParameter:
+                outputParameterKey: metrics
+                producerTask: train-rf
         taskInfo:
-          name: condition-2
+          name: condition-3
         triggerPolicy:
           condition: inputs.parameter_values['pipelinechannel--compare-model-Output']
             == 'RF'
@@ -729,6 +1070,21 @@ root:
               componentInputParameter: project_id
         taskInfo:
           name: download-data-2
+      download-old-model:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-download-old-model
+        inputs:
+          parameters:
+            bucket:
+              componentInputParameter: model_repo
+            file_name:
+              componentInputParameter: old_model_file_name
+            project_id:
+              componentInputParameter: project_id
+        taskInfo:
+          name: download-old-model
       train-lr:
         cachingOptions:
           enableCache: true
@@ -774,6 +1130,8 @@ root:
       data_bucket:
         parameterType: STRING
       model_repo:
+        parameterType: STRING
+      old_model_file_name:
         parameterType: STRING
       project_id:
         parameterType: STRING
