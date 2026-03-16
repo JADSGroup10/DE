@@ -1,5 +1,7 @@
 # DE
-Repo for DE assignment:
+Repo for Data Engineering team assignment. 
+
+Implementation of MLOps and CI-CD pipelines using Google Cloud Platform. 
 
 Server for all google cloud: europe-west4
 
@@ -10,4 +12,3 @@ For testing locally export the following environmental variables:
 Model name should be best_model.pkl
 
 
-This is a test.
